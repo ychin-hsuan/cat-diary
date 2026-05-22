@@ -374,20 +374,39 @@ body {
   z-index: 0;
 }
 
-/* The postcard itself */
+/* Postcard wrap: maintains aspect ratio and scales the fixed-size postcard inside */
 .postcard-wrap {
+  width: 100%;
+  max-width: 900px;
   position: relative;
   filter: drop-shadow(0 30px 30px rgba(31,26,20,0.18)) drop-shadow(0 4px 8px rgba(31,26,20,0.12));
 }
+.postcard-wrap::before {
+  content: "";
+  display: block;
+  padding-top: 66.666%; /* 1 / 1.5 — locks aspect ratio */
+}
+
+/* The postcard itself is ALWAYS 900x600 internally — uniform on every device.
+   The transform scales it to fit the wrap. */
 .postcard {
-  width: 100%;
-  max-width: 900px;
-  aspect-ratio: 1.5/1;
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 900px;
+  height: 600px;
+  transform-origin: top left;
+  transform: scale(var(--postcard-scale, 1));
   border-radius: 10px;
   overflow: hidden;
 }
-.postcard-wrap { width: 100%; max-width: 900px; }
+/* When exporting, render at natural size offscreen so the canvas pixels match the design. */
+.postcard[data-exporting="true"] {
+  position: fixed !important;
+  top: 0 !important;
+  left: -10000px !important;
+  transform: none !important;
+}
 
 .postcard-inner {
   position: absolute;
@@ -724,23 +743,6 @@ body {
   .sprite-toolbar .tb-label { display: none; }
 
   .stage-hint { font-size: 10.5px; bottom: 8px; padding: 3px 8px; }
-
-  /* Postcard text scales with width — make the location title smaller proportionally */
-  .location-overlay .title { font-size: 24px; }
-  .location-overlay .subtitle { font-size: 11px; }
-  .location-overlay { top: 14px; left: 14px; right: 14px; }
-
-  .right-pane { padding: 12px 10px; gap: 8px; }
-  .brand-stamp { font-size: 13px; }
-  .brand-stamp .row-2 { font-size: 9px; }
-  .right-stamp { width: 64px; }
-  .badge-card { padding: 8px 10px; gap: 3px; }
-  .badge-title { font-size: 11px; }
-  .badge-stars svg { width: 14px; height: 14px; }
-  .badge-points { font-size: 11px; }
-  .badge-points small { font-size: 9px; }
-  .coords { font-size: 8.5px; }
-  .cleared-stamp { width: 60px; height: 60px; bottom: 10px; right: 10px; }
 }
 
 @media (max-width: 420px) {
@@ -1310,6 +1312,21 @@ function App() {
 
   const postcardRef = useRef(null);
 
+  // Keep the postcard internally at 900×600. Scale it visually to fit any viewport.
+  useEffect(() => {
+    const wrap = postcardRef.current;
+    if (!wrap) return;
+    function update() {
+      const w = wrap.clientWidth || 1;
+      wrap.style.setProperty('--postcard-scale', (w / 900).toFixed(4));
+    }
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(wrap);
+    window.addEventListener('resize', update);
+    return () => { ro.disconnect(); window.removeEventListener('resize', update); };
+  }, []);
+
   const frame = useMemo(() => FRAMES.find(f => f.id === frameId) || FRAMES[0], [frameId]);
 
   const dateStr = useMemo(() => {
@@ -1374,10 +1391,23 @@ function App() {
   async function downloadPostcard() {
     setDownloading(true);
     try {
-      const dataUrl = await renderPostcardPNG({
-        photo, location, country, frame, sprites, points, stars, stamps, dateStr,
-        postcardEl: postcardRef.current.querySelector(".postcard"),
-      });
+      const postcardEl = postcardRef.current.querySelector(".postcard");
+      // Render at natural 900×600 offscreen so the canvas pixels match the design
+      // regardless of the current viewport size.
+      postcardEl.setAttribute("data-exporting", "true");
+      // Wait two frames so the layout settles before we read positions
+      await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+      let dataUrl;
+      try {
+        dataUrl = await renderPostcardPNG({
+          photo, location, country, frame, sprites, points, stars, stamps, dateStr,
+          postcardEl,
+        });
+      } finally {
+        postcardEl.removeAttribute("data-exporting");
+      }
+
       const link = document.createElement("a");
       const fname = (location || "postcard").replace(/[^a-z0-9一-龥]/gi, "_");
       link.download = `${fname}-postcard.png`;
