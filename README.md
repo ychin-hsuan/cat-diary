@@ -1,98 +1,199 @@
-# 🐱 Cat Diary · Postcard Studio
+<div align="center">
 
-A cute, browser-based postcard generator. Upload a photo, pick a frame, drop your cats onto it, type the location — and download a high-resolution PNG.
+![Cat Diary Postcard Studio](docs/banner.png)
 
-Built as a single self-contained `index.html` (React + Babel inline, no build step).
+</div>
 
-![cat diary postcard studio](docs/preview.png)
+```
+╭─────────────────────────────────────────────────────────────╮
+│                                                             │
+│   一個會把照片變成可愛明信片的小網站。                       │
+│   上傳照片 → 選明信片款式 → 撒幾隻貓貓 → 下載 PNG。          │
+│                                                             │
+│   A browser postcard studio for your cat photos.            │
+│                                                             │
+╰─────────────────────────────────────────────────────────────╯
+```
+
+<div align="center">
+
+`React 18`　·　`Vanilla CSS`　·　`Canvas 2D`　·　`No build step`
+
+</div>
 
 ---
 
-## ✨ Features
+## ░░ Features ░░
 
-- 📷 **Photo upload** — drop in any JPG/PNG; it fills the left pane edge-to-edge
-- 🏷️ **Location + country** text overlay (top-left)
-- 🎨 **6 postcard styles** — Cream Paper, Sunset Gold, Mossy Forest, Misty Blossom, Midnight Blue, Washi Collage
-- 📮 **4 postage stamps** — lemon / flower / leaf / berry
-- 🐈 **16 cat stickers** — sitting, hugging, sparkling, sleeping, peeking, side-by-side, rolling, waving, head-tilting, question-mark-ing, cuddling, in-a-box, belly-up, walking away, washing, meowing
-- 🖱️ **Direct manipulation** — click a cat to select, drag to move, use the floating toolbar to resize / flip / delete
-- ⌨️ **Keyboard shortcuts** — `Esc` to deselect, `Delete` / `Backspace` to remove a selected cat
-- 📱 **Mobile-friendly** — works on phones too
-- ⬇️ **One-click PNG export** at 1800×1200 (2× retina)
+```
+  ┌──────────────────────┬───────────────────────────────────┐
+  │  📷  upload          │  Drop any JPG/PNG into the page.  │
+  │  🏷️  title           │  Location + country, top-left.    │
+  │  🎨  frame           │  6 styles to pick from.           │
+  │  📮  stamp           │  4 fruit / flower postage stamps. │
+  │  🐈  cats            │  16 sticker poses to drop in.     │
+  │  ✋  drag / resize   │  Click → drag → slider → flip.    │
+  │  📱  responsive      │  Phone, tablet, desktop — same.   │
+  │  ⬇️  export          │  1800×1200 PNG, one click.        │
+  └──────────────────────┴───────────────────────────────────┘
+```
 
 ---
 
-## 🚀 Run it
+## ▓▓ The 16 cats ▓▓
 
-No build, no install. Just open the HTML.
+```
+   ╭─────╮  ╭─────╮  ╭─────╮  ╭─────╮
+   │ ◕‿◕ │  │ ⊂(˘    │ ✦◕‿◕ │  │ ︶︶ │     兩隻坐  ·  抱抱
+   │/ ▽ \│  │ ◕)っ │  │/ ▽ \│  │ zzz │     閃亮     ·  睡覺
+   ╰─────╯  ╰─────╯  ╰─────╯  ╰─────╯
+
+   ╭─────╮  ╭─────╮  ╭─────╮  ╭─────╮
+   │ 👀  │  │ ◕◕  │  │  ⤳  │  │ ✋  │     偷看     ·  並排
+   │  ノ  │  │ /\/\│  │ ʕ•ᴥ•ʔ│  │ ◕‿◕ │     翻滾     ·  招手
+   ╰─────╯  ╰─────╯  ╰─────╯  ╰─────╯
+
+   ╭─────╮  ╭─────╮  ╭─────╮  ╭─────╮
+   │ ◕_◕?│  │ ◑_◑?│  │ ◕◡◕ │  │ ▱_▱ │     歪頭     ·  問號
+   │  ?  │  │  ?  │  │ ♡♡♡ │  │ 📦  │     貼貼     ·  紙箱
+   ╰─────╯  ╰─────╯  ╰─────╯  ╰─────╯
+
+   ╭─────╮  ╭─────╮  ╭─────╮  ╭─────╮
+   │ ʘ‿ʘ │  │ ⊂)⊃ │  │ ฅʕ•ᴥ│  │ =^ω^│     翻肚     ·  背影
+   │ \^^/│  │ /\/\│  │ /\/\│  │  ♪♪ │     洗澡     ·  喵叫
+   ╰─────╯  ╰─────╯  ╰─────╯  ╰─────╯
+```
+
+*（實際長相當然比 ASCII 可愛太多了 — 看 `assets/cats/` 裡的 PNG）*
+
+---
+
+## ▒▒ Quick start ▒▒
 
 ```bash
-# Clone
-git clone <your-repo-url>
-cd <your-repo>
-
-# Option A — open the file directly
-open index.html
-
-# Option B — serve locally (recommended; some browsers block local image loading)
-python3 -m http.server 8000
-# then visit http://localhost:8000
+$ git clone https://github.com/<you>/cat-diary.git
+$ cd cat-diary
+$ python3 -m http.server 8000
+$ open http://localhost:8000
 ```
 
-Or drop the folder onto **GitHub Pages** / **Vercel** / **Netlify** — it's just static files.
+…or just drag `index.html` into a browser. No build, no install, no node_modules.
+
+For deployment: drop the folder on **GitHub Pages**, **Vercel**, **Netlify**, or any static host. Done.
 
 ---
 
-## 📁 Project structure
+## ▒▒ How it's built ▒▒
 
 ```
-.
-├── index.html          # The whole app — markup, styles, React components, exporter
+┌───────────────────────────────────────────────────────────┐
+│                                                           │
+│   index.html  ←  EVERYTHING lives in here                 │
+│        │                                                  │
+│        ├─ <style>     · ~700 lines of CSS                 │
+│        ├─ React 18    · via CDN, no bundler               │
+│        ├─ Babel       · transpiles JSX in-browser         │
+│        └─ <App />     · sidebar + stage + canvas exporter │
+│                                                           │
+│   assets/cats/<id>.png  ←  16 transparent stickers        │
+│                                                           │
+└───────────────────────────────────────────────────────────┘
+```
+
+A few interesting bits:
+
+- The postcard is **always rendered at 900 × 600 internally**, then visually scaled with `transform: scale()` to fit any container. So a phone and a desktop see the same layout — the only difference is how big it looks.
+- **Direct manipulation**: click a cat, drag to move, use the floating toolbar to resize / flip / delete. Positions are stored as percentages so they survive resize.
+- **PNG export**: handwritten canvas renderer reads positions from the live DOM and re-paints everything at 2×. No `html2canvas`, no SVG `foreignObject` quirks.
+
+---
+
+## ▒▒ File map ▒▒
+
+```
+cat-diary/
+├── index.html            ← the whole app (~1900 lines)
+├── README.md             ← you are here
 ├── assets/
-│   └── cats/           # 16 transparent-PNG cat stickers
-│       ├── duo-sit.png
-│       ├── hug.png
-│       ├── sleep.png
-│       └── … (13 more)
-└── README.md
+│   └── cats/             ← 16 transparent-PNG sticker poses
+│       ├── duo-sit.png         兩隻坐
+│       ├── hug.png             抱抱
+│       ├── sparkle.png         閃亮
+│       ├── sleep.png           睡覺
+│       ├── peek.png            偷看
+│       ├── side-by-side.png    並排
+│       ├── roll.png            翻滾
+│       ├── wave.png            招手
+│       ├── huh.png             歪頭
+│       ├── huh-white.png       問號
+│       ├── heart-cuddle.png    貼貼
+│       ├── box.png             紙箱
+│       ├── belly.png           翻肚
+│       ├── backs.png           背影
+│       ├── wash.png            洗澡
+│       └── meow.png            喵叫
+└── docs/
+    └── banner.png
 ```
 
 ---
 
-## 🛠️ How it works
+## ▒▒ Bring your own cats ▒▒
 
-- **UI**: React 18 + JSX, transpiled in-browser by `@babel/standalone` — no bundler.
-- **Layout**: CSS Grid for the sidebar/stage split, flexbox inside.
-- **Postcard rendering**: a regular DOM tree, scaled to fit any viewport with `aspect-ratio: 1.5/1`.
-- **Drag & drop**: pointer events on the sprite layer, with percent-based positioning so sprites stay put when the postcard resizes.
-- **PNG export**: a hand-rolled canvas renderer (`renderPostcardPNG`) that reads live DOM positions and re-paints everything to a `<canvas>` at 2× resolution. This avoids `html-to-image` / `foreignObject` quirks with user-uploaded photos and external SVGs.
-
----
-
-## 🎨 Replacing the cat stickers
-
-The 16 cats live in `assets/cats/<id>.png` as transparent PNGs. The list of variants is defined inline in `index.html`:
-
-```js
-const SPRITE_VARIANTS = [
-  { id: "duo-sit",      name: "兩隻坐" },
-  { id: "hug",          name: "抱抱" },
-  // … etc.
-];
+```
+   ┌─── 1 ────────────────────────┐
+   │ Drop transparent PNGs into   │
+   │ assets/cats/<your-id>.png    │
+   └──────────────────────────────┘
+                │
+                ▼
+   ┌─── 2 ────────────────────────┐
+   │ Edit SPRITE_VARIANTS         │
+   │ inside index.html:           │
+   │                              │
+   │   { id: "your-id",           │
+   │     name: "顯示名稱" }       │
+   └──────────────────────────────┘
+                │
+                ▼
+   ┌─── 3 ────────────────────────┐
+   │ Reload. Your cats appear     │
+   │ in the sticker picker.       │
+   └──────────────────────────────┘
 ```
 
-To use your own stickers:
-1. Drop transparent PNGs into `assets/cats/`
-2. Update `SPRITE_VARIANTS` with your new ids and display names
+---
+
+## ░░ Keyboard ░░
+
+```
+  ┌──────────────┬───────────────────────┐
+  │  Click cat   │  select               │
+  │  Drag        │  move (anywhere)      │
+  │  Slider      │  resize (60—300 px)   │
+  │  Flip btn    │  mirror               │
+  │  Delete      │  remove selected      │
+  │  Esc         │  deselect             │
+  └──────────────┴───────────────────────┘
+```
 
 ---
 
-## 📝 License
+## ▒▒ License ▒▒
 
-Code: MIT. Use it for anything.
+Code: **MIT** — fork it, hack it, postcard-ify it.
 
-Cat sticker artwork is the personal property of the project owner — feel free to fork the code, but please bring your own stickers.
+Cat sticker artwork in `assets/cats/` belongs to the project owner — please bring your own stickers when you fork.
 
 ---
 
-Made with 🐾 for a tiny orange tabby and a fluffy white-orange friend.
+<div align="center">
+
+```
+        ╱|、
+      (˚ˎ 。7      made with 🐾 for two very specific cats
+       |、˜〵      and anyone else who likes mail.
+       じしˍ,)ノ
+```
+
+</div>
